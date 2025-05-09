@@ -1,2 +1,10 @@
 venv/
 migrations/
+
+.venv/
+.idx/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
