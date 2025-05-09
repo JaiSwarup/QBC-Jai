@@ -6,6 +6,7 @@ from .models import User
 from flask_login import login_user, login_required, logout_user, current_user   
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db  
+from . import ADMIN_EMAIL
 
 mail = Mail()
 
@@ -17,7 +18,7 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
         user = User.query.filter_by(email=email).first()
-
+        
         if user:
             if not user.is_verified:
                 flash('Please verify your email before logging in.', category='error')
@@ -73,7 +74,7 @@ def signup():
                 subject='Email Verification',
                 body=f'Your verification code is: {verification_code}',
                 to=[email],
-                from_email='qbc_admin@fastmail.com'
+                from_email=ADMIN_EMAIL
             )
             msg.send()
 
@@ -117,7 +118,7 @@ def resend_verification_code():
             subject='Resend: Email Verification',
             body=f'Your new verification code is: {new_code}',
             to=[email],
-            from_email='qbc_admin@fastmail.com'
+            from_email=ADMIN_EMAIL
         )
         msg.send()
 
