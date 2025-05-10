@@ -13,6 +13,8 @@ mail = Mail()
 
 load_dotenv()
 
+from .models import User
+
 DB_NAME = os.environ.get('SQLITE_DB', 'qbc.db') 
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'qbc_admin@fastmail.com') 
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', '342b6h558h6z2w57')
@@ -47,7 +49,8 @@ def create_database(app):
 
 def create_app():
     app = Flask(__name__)
-    print(ADMIN_EMAIL, ADMIN_PASSWORD)
+    print("Admin email address:", ADMIN_EMAIL)
+    print("Admin password:", ADMIN_PASSWORD)
     app.config['SECRET_KEY'] = SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{DB_NAME}"
     
@@ -61,7 +64,7 @@ def create_app():
     
     db.init_app(app)
     mail.init_app(app)
-    migrate = Migrate(app, db)
+    Migrate(app, db)
     # Initialize Flask-Login
     login_manager = LoginManager()
     login_manager.init_app(app)
@@ -77,8 +80,6 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
-    from .models import User, Quiz, Question, Score, Chapter, Subject
-    
     create_database(app)
     
     return app
